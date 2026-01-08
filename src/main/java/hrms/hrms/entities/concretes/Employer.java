@@ -2,6 +2,10 @@ package hrms.hrms.entities.concretes;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +13,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;         // ADD THIS
+import jakarta.validation.constraints.NotBlank;     // ADD THIS
+import jakarta.validation.constraints.Pattern;      // ADD THIS
+import jakarta.validation.constraints.Size;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,31 +27,45 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "employers")
-
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "jobAdvertisements"})
 public class Employer {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private int id;
 
-	@Column(name = "company_name")
-	private String companyName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
 
-	@Column(name = "web_page")
-	private String companyWebPage;
+    @NotBlank(message = "Company name is required")
+    @Size(min = 2, max = 200, message = "Company name must be between 2 and 200 characters")
+    @Column(name = "company_name", nullable = false, length = 200)
+    private String companyName;
 
-	@Column(name = "email")
-	private String email;
+    @NotBlank(message = "Company website is required")
+    @Pattern(regexp = "^(https?://)?(www\\.)?[a-zA-Z0-9-]+\\.[a-zA-Z]{2,}.*$",
+            message = "Please enter a valid website URL")
+    @Column(name = "web_page", nullable = false, length = 255)
+    private String companyWebPage;
 
-	@Column(name = "phone_number")
-	private String phoneNumber;
+    @NotBlank(message = "Email is required")
+    @Email(message = "Please enter a valid email address")
+    @Column(name = "email", nullable = false, unique = true, length = 100)
+    private String email;
 
-	@Column(name = "password", nullable = false)
-	private String password;
+    @NotBlank(message = "Phone number is required")
+    @Pattern(regexp = "^[0-9]{10,15}$", message = "Phone number must be between 10 and 15 digits")
+    @Column(name = "phone_number", nullable = false, length = 15)
+    private String phoneNumber;
 
-	@Column(name = "rePassword", nullable = false)
-	private String rePassword;
+    @NotBlank(message = "Password is required")
+    @Size(min = 6, max = 100, message = "Password must be at least 6 characters")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "password", nullable = false, length = 255)
+    private String password;
 
-	@OneToMany(mappedBy = "employer")
-	private List<JobAdvertisement> jobAdvertisements;
+    @Transient // Don't persist this field in database
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String rePassword;
+
+    @OneToMany(mappedBy = "employer", cascade = CascadeType.ALL)
+    private List<JobAdvertisement> jobAdvertisements;
 }

@@ -14,29 +14,27 @@ import hrms.hrms.core.utilities.Result;
 import hrms.hrms.entities.concretes.JobAdvertisement;
 
 @RestController
-@RequestMapping("/api/jobPost")
+@RequestMapping("/api/job-advertisements")
 public class JobAdvertisementController {
 
-	private JobAdvertisementService jobAdvertisementService;
+    private JobAdvertisementService jobAdvertisementService;
 
-	public JobAdvertisementController(JobAdvertisementService jobAdvertisementService) {
-		super();
-		this.jobAdvertisementService = jobAdvertisementService;
-	}
+    public JobAdvertisementController(JobAdvertisementService jobAdvertisementService) {
+        this.jobAdvertisementService = jobAdvertisementService;
+    }
 
-	@GetMapping("/getAll")
-	public DataResult<List<JobAdvertisement>> getAll() {
-		return this.jobAdvertisementService.getAll();
-	}
+    @GetMapping
+    public DataResult<List<JobAdvertisement>> getAll() {
+        return this.jobAdvertisementService.getAll();
+    }
 
-	@PostMapping("/add")
-	public Result add(@RequestBody JobAdvertisement jobAdvertisement) {
-		return this.jobAdvertisementService.add(jobAdvertisement);
-	}
+    @PostMapping
+    public Result add(@RequestBody JobAdvertisement jobAdvertisement) {
+        return this.jobAdvertisementService.add(jobAdvertisement);
+    }
 
-	@GetMapping("/getDeadline")
-	public DataResult<List<JobAdvertisement>> getByApplicationDeadline() {
-		return this.jobAdvertisementService.getByApplicationDeadline();
-	}
-
+    @GetMapping("/active")
+    public DataResult<List<JobAdvertisement>> getActiveJobs() {
+        return this.jobAdvertisementService.getActiveJobAdvertisements();
+    }
 }

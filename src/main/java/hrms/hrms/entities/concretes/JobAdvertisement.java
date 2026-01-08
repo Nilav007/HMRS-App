@@ -1,6 +1,5 @@
 package hrms.hrms.entities.concretes;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -41,11 +40,11 @@ public class JobAdvertisement {
 	@Column(name = "max_salary")
 	private int maxSalary;
 
-	@Column(name = "job_relase_date")
-	private LocalDate jobRelaseDate;
+	@Column(name = "job_release_date")
+	private LocalDate jobReleaseDate;
 
 	@Column(name = "application_deadline")
-	private Date applicationDeadline;
+	private LocalDate applicationDeadline;
 
 	@ManyToOne
 	@JoinColumn(name = "job_position_id")

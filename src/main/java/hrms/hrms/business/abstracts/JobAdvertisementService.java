@@ -9,8 +9,5 @@ import hrms.hrms.entities.concretes.JobAdvertisement;
 public interface JobAdvertisementService {	
 	Result add(JobAdvertisement jobAdvertisement);
 	DataResult<List<JobAdvertisement>> getAll();
-	DataResult<List<JobAdvertisement>> getByApplicationDeadline();
-		
-	
-
+	DataResult<List<JobAdvertisement>> getActiveJobAdvertisements();
 }
