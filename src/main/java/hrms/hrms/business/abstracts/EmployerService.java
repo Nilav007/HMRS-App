@@ -1,13 +1,15 @@
 package hrms.hrms.business.abstracts;
 
-import java.util.List;
-
-import hrms.hrms.core.utilities.DataResult;
-import hrms.hrms.core.utilities.Result;
+import hrms.hrms.core.utilities.results.DataResult;
+import hrms.hrms.core.utilities.results.Result;
 import hrms.hrms.entities.concretes.Employer;
 
-public interface EmployerService {
-	 DataResult<List<Employer>> getAll();
-	 Result add(Employer employer);
+import java.util.List;
 
+public interface EmployerService {
+    DataResult<List<Employer>> getAll();
+    Result add(Employer employer);
+    DataResult<Employer> getById(int id);
+    Result update(Employer employer);
+    Result delete(int id);
 }

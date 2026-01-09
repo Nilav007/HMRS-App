@@ -1,29 +1,15 @@
 package hrms.hrms.entities.concretes;
 
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;         // ADD THIS
-import jakarta.validation.constraints.NotBlank;     // ADD THIS
-import jakarta.validation.constraints.Pattern;      // ADD THIS
-import jakarta.validation.constraints.Size;
-import jakarta.persistence.Transient;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "employers")
@@ -62,10 +48,19 @@ public class Employer {
     @Column(name = "password", nullable = false, length = 255)
     private String password;
 
-    @Transient // Don't persist this field in database
+    @Transient
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String rePassword;
 
     @OneToMany(mappedBy = "employer", cascade = CascadeType.ALL)
     private List<JobAdvertisement> jobAdvertisements;
+    
+    // Explicit getId() for compilation - Lombok not processing correctly
+    public int getId() {
+        return id;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
+    }
 }

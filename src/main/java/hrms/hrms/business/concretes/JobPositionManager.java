@@ -1,50 +1,62 @@
 package hrms.hrms.business.concretes;
 
-import java.util.List;
-
+import hrms.hrms.business.abstracts.JobPositionService;
+import hrms.hrms.core.utilities.results.*;
+import hrms.hrms.dataAccess.abstracts.JobPositionDao;
+import hrms.hrms.entities.concretes.JobPosition;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import hrms.hrms.business.abstracts.JobPositonService;
-import hrms.hrms.core.utilities.DataResult;
-import hrms.hrms.core.utilities.ErrorResult;
-import hrms.hrms.core.utilities.Result;
-import hrms.hrms.core.utilities.SuccessDataResult;
-import hrms.hrms.core.utilities.SuccessResult;
-import hrms.hrms.dataAccess.abstracts.JobPositonDao;
-import hrms.hrms.entities.concretes.JobPosition;
+import java.util.List;
 
 @Service
-public class JobPositionManager implements JobPositonService {
-	private JobPositonDao jobPositonDao;
+public class JobPositionManager implements JobPositionService {
 
-	public JobPositionManager(JobPositonDao jobPositonDao) {
-		super();
-		this.jobPositonDao = jobPositonDao;
-	}
+    private JobPositionDao jobPositionDao;
 
-	@Override
-	public DataResult<List<JobPosition>> getAll() {
+    @Autowired
+    public JobPositionManager(JobPositionDao jobPositionDao) {
+        this.jobPositionDao = jobPositionDao;
+    }
 
-		return new SuccessDataResult<List<JobPosition>>
-		(this.jobPositonDao.findAll(), "job position is listed");
-	}
+    @Override
+    public DataResult<List<JobPosition>> getAll() {
+        return new SuccessDataResult<List<JobPosition>>(
+            this.jobPositionDao.findAll(),
+            "Job positions listed successfully"
+        );
+    }
 
-	public Result isJobPositionExist(String jobTitle) {
-		if (this.jobPositonDao.findByTitle(jobTitle) == null) {
-			return new SuccessResult();
-		} else {
-			return new ErrorResult();
-		}
-	}
+    @Override
+    public Result add(JobPosition jobPosition) {
+        this.jobPositionDao.save(jobPosition);
+        return new SuccessResult("Job position added successfully");
+    }
 
-	@Override
-	public Result add(JobPosition position) {
-		if (isJobPositionExist(position.getTitle()).getSucces()) {
-			this.jobPositonDao.save(position);
-			return new SuccessResult("Pozisyon basariyla eklendi: " + position.getTitle());
-		} else {
-			return new ErrorResult("Bu pozisyon daha once eklenmistir: " + position.getTitle());
-		}
-	}
+    @Override
+    public DataResult<JobPosition> getById(int id) {
+        JobPosition jobPosition = this.jobPositionDao.findById(id).orElse(null);
+        if (jobPosition != null) {
+            return new SuccessDataResult<JobPosition>(jobPosition, "Job position found");
+        }
+        return new ErrorDataResult<JobPosition>("Job position not found");
+    }
 
+    @Override
+    public Result update(JobPosition jobPosition) {
+        if (this.jobPositionDao.existsById(jobPosition.getId())) {
+            this.jobPositionDao.save(jobPosition);
+            return new SuccessResult("Job position updated successfully");
+        }
+        return new ErrorResult("Job position not found");
+    }
+
+    @Override
+    public Result delete(int id) {
+        if (this.jobPositionDao.existsById(id)) {
+            this.jobPositionDao.deleteById(id);
+            return new SuccessResult("Job position deleted successfully");
+        }
+        return new ErrorResult("Job position not found");
+    }
 }

@@ -1,64 +1,62 @@
 package hrms.hrms.business.concretes;
 
-import java.time.LocalDate;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import hrms.hrms.business.abstracts.JobSeekerService;
-import hrms.hrms.core.utilities.DataResult;
-import hrms.hrms.core.utilities.ErrorResult;
-import hrms.hrms.core.utilities.Result;
-import hrms.hrms.core.utilities.SuccessDataResult;
-import hrms.hrms.core.utilities.SuccessResult;
+import hrms.hrms.core.utilities.results.*;
 import hrms.hrms.dataAccess.abstracts.JobSeekerDao;
 import hrms.hrms.entities.concretes.JobSeeker;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class JobSeekerManager implements JobSeekerService {
-	private JobSeekerDao jobSeekerDao;
 
-	public JobSeekerManager(JobSeekerDao jobSeekerDao) {
-		super();
-		this.jobSeekerDao = jobSeekerDao;
-	}
+    private JobSeekerDao jobSeekerDao;
 
-	public Result isEmailUsed(String email) {
-		if (this.jobSeekerDao.findByEmail(email) == null) {
-			return new SuccessResult("");
-		} else {
-			return new ErrorResult("this email has been used is before.");
-		}
-	}
+    @Autowired
+    public JobSeekerManager(JobSeekerDao jobSeekerDao) {
+        this.jobSeekerDao = jobSeekerDao;
+    }
 
-	@Override
-	public DataResult<List<JobSeeker>> getAll() {
-		return new SuccessDataResult<List<JobSeeker>>(this.jobSeekerDao.findAll(), "jobseeker listed");
-	}
+    @Override
+    public DataResult<List<JobSeeker>> getAll() {
+        return new SuccessDataResult<List<JobSeeker>>(
+            this.jobSeekerDao.findAll(),
+            "Job seekers listed successfully"
+        );
+    }
 
-	@Override
-	public Result add(JobSeeker jobSeeker) {
-		if (isEmailUsed(jobSeeker.getEmail()).getSucces()) {
-			this.jobSeekerDao.save(jobSeeker);
-			return new SuccessResult("jobseeker is listed");
-		} else {
-			return new ErrorResult();
-		}
-	}
+    @Override
+    public Result add(JobSeeker jobSeeker) {
+        this.jobSeekerDao.save(jobSeeker);
+        return new SuccessResult("Job seeker added successfully");
+    }
 
-	public Result jobSeekerCheck(JobSeeker jobSeeker) {
-		if (jobSeeker.getName() == null) {
-			return new ErrorResult("name field cannot be left");
-		} else if (jobSeeker.getLastName() == null) {
-			return new ErrorResult("last name field cannot be left");
-		} else if (jobSeeker.getBirthDate() < 1900 || jobSeeker.getBirthDate() > LocalDate.now().getYear()) {
-			return new ErrorResult("Birth Date field cannot be left");
-		} else if (jobSeeker.getEmail() == null) {
-			return new ErrorResult("Email field cannot be left");
-		} else if (jobSeeker.getPassword() == null) {
-			return new ErrorResult("Password field cannot be left");
-		}
-		return new SuccessResult("Success");
-	}
+    @Override
+    public DataResult<JobSeeker> getById(int id) {
+        JobSeeker jobSeeker = this.jobSeekerDao.findById(id).orElse(null);
+        if (jobSeeker != null) {
+            return new SuccessDataResult<JobSeeker>(jobSeeker, "Job seeker found");
+        }
+        return new ErrorDataResult<JobSeeker>("Job seeker not found");
+    }
 
+    @Override
+    public Result update(JobSeeker jobSeeker) {
+        if (this.jobSeekerDao.existsById(jobSeeker.getId())) {
+            this.jobSeekerDao.save(jobSeeker);
+            return new SuccessResult("Job seeker updated successfully");
+        }
+        return new ErrorResult("Job seeker not found");
+    }
+
+    @Override
+    public Result delete(int id) {
+        if (this.jobSeekerDao.existsById(id)) {
+            this.jobSeekerDao.deleteById(id);
+            return new SuccessResult("Job seeker deleted successfully");
+        }
+        return new ErrorResult("Job seeker not found");
+    }
 }
