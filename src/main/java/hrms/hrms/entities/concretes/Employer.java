@@ -5,13 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.*;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "employers")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "jobAdvertisements"})
 public class Employer {
@@ -54,13 +49,87 @@ public class Employer {
 
     @OneToMany(mappedBy = "employer", cascade = CascadeType.ALL)
     private List<JobAdvertisement> jobAdvertisements;
-    
-    // Explicit getId() for compilation - Lombok not processing correctly
+
+    // Default constructor
+    public Employer() {
+    }
+
+    // Parameterized constructor
+    public Employer(int id, String companyName, String companyWebPage, String email,
+                    String phoneNumber, String password, String rePassword,
+                    List<JobAdvertisement> jobAdvertisements) {
+        this.id = id;
+        this.companyName = companyName;
+        this.companyWebPage = companyWebPage;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.rePassword = rePassword;
+        this.jobAdvertisements = jobAdvertisements;
+    }
+
+    // Getters and Setters
     public int getId() {
         return id;
     }
-    
+
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getCompanyWebPage() {
+        return companyWebPage;
+    }
+
+    public void setCompanyWebPage(String companyWebPage) {
+        this.companyWebPage = companyWebPage;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRePassword() {
+        return rePassword;
+    }
+
+    public void setRePassword(String rePassword) {
+        this.rePassword = rePassword;
+    }
+
+    public List<JobAdvertisement> getJobAdvertisements() {
+        return jobAdvertisements;
+    }
+
+    public void setJobAdvertisements(List<JobAdvertisement> jobAdvertisements) {
+        this.jobAdvertisements = jobAdvertisements;
     }
 }

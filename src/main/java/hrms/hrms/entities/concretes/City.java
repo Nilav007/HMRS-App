@@ -13,13 +13,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "city")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "jobAdvertisements"})
@@ -37,4 +31,40 @@ public class City {
 
     @OneToMany(mappedBy = "city")
     private List<JobAdvertisement> jobAdvertisements;
+
+    // Default constructor
+    public City() {
+    }
+
+    // Parameterized constructor
+    public City(int id, String cityName, List<JobAdvertisement> jobAdvertisements) {
+        this.id = id;
+        this.cityName = cityName;
+        this.jobAdvertisements = jobAdvertisements;
+    }
+
+    // Getters and Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public List<JobAdvertisement> getJobAdvertisements() {
+        return jobAdvertisements;
+    }
+
+    public void setJobAdvertisements(List<JobAdvertisement> jobAdvertisements) {
+        this.jobAdvertisements = jobAdvertisements;
+    }
 }

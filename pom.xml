@@ -9,18 +9,17 @@
         <version>3.2.2</version>
         <relativePath/>
     </parent>
-    
+
     <groupId>hrms</groupId>
     <artifactId>hrms</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>hrms</name>
     <description>Human Resources Management System</description>
-    
+
     <properties>
         <java.version>21</java.version>
-        <lombok.version>1.18.34</lombok.version>
     </properties>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -40,30 +39,17 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
             </plugin>
         </plugins>
     </build>
