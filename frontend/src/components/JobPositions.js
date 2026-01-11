@@ -12,10 +12,15 @@ function JobPositions() {
 
   const fetchJobPositions = async () => {
     try {
-      const response = await api.get('/job-positions');
-      setJobPositions(response.data);
+      const response = await api.get('/jobpositions/getall');
+      if (response.data.success && response.data.data) {
+        setJobPositions(response.data.data);
+      } else {
+        setJobPositions([]);
+      }
       setLoading(false);
     } catch (err) {
+      console.error('Error fetching job positions:', err);
       setError('Failed to load job positions');
       setLoading(false);
     }
@@ -34,12 +39,7 @@ function JobPositions() {
           jobPositions.map((job) => (
             <div key={job.id} className="job-card">
               <h3>{job.title}</h3>
-              <p><strong>Company:</strong> {job.employer?.companyName}</p>
-              <p><strong>Description:</strong> {job.description}</p>
-              <p><strong>Requirements:</strong> {job.requirements}</p>
-              <p><strong>Salary:</strong> ${job.salary}</p>
-              <p><strong>Location:</strong> {job.location}</p>
-              <p><strong>Status:</strong> {job.status}</p>
+              <p><strong>Position:</strong> {job.title}</p>
             </div>
           ))
         )}
