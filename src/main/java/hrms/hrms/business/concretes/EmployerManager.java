@@ -59,4 +59,16 @@ public class EmployerManager implements EmployerService {
         }
         return new ErrorResult("Employer not found");
     }
+
+    @Override
+    public DataResult<Employer> login(String email, String password) {
+        Employer employer = this.employerDao.findByEmail(email);
+        if (employer == null) {
+            return new ErrorDataResult<Employer>("Employer not found");
+        }
+        if (!employer.getPassword().equals(password)) {
+            return new ErrorDataResult<Employer>("Invalid password");
+        }
+        return new SuccessDataResult<Employer>(employer, "Login successful");
+    }
 }

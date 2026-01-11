@@ -12,4 +12,5 @@ public interface EmployerService {
     DataResult<Employer> getById(int id);
     Result update(Employer employer);
     Result delete(int id);
+    DataResult<Employer> login(String email, String password);
 }

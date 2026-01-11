@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/employers")
@@ -44,5 +45,12 @@ public class EmployersController {
     @DeleteMapping("/delete")
     public Result delete(@RequestParam int id) {
         return this.employerService.delete(id);
+    }
+
+    @PostMapping("/login")
+    public DataResult<Employer> login(@RequestBody Map<String, String> credentials) {
+        String email = credentials.get("email");
+        String password = credentials.get("password");
+        return this.employerService.login(email, password);
     }
 }
