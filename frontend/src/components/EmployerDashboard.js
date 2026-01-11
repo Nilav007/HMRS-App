@@ -1,53 +1,275 @@
-import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../services/api';
 
 function EmployerDashboard() {
+  const [jobPositions, setJobPositions] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [myJobs, setMyJobs] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    jobPosition: { id: '' },
+    city: { id: '' },
+    employer: { id: localStorage.getItem('employerId') },
+    description: '',
+    minSalary: '',
+    maxSalary: '',
+    openPositionCount: '',
+    applicationDeadline: ''
+  });
+  const [error, setError] = useState('');
   const navigate = useNavigate();
-  const userEmail = localStorage.getItem('userEmail');
+
+  useEffect(() => {
+    const employerId = localStorage.getItem('employerId');
+    if (!employerId) {
+      navigate('/employer-login');
+      return;
+    }
+    fetchJobPositions();
+    fetchCities();
+    fetchMyJobs();
+  }, [navigate]);
+
+  const fetchJobPositions = async () => {
+    try {
+      const response = await api.get('/jobpositions/getall');
+      if (response.data.success && response.data.data) {
+        setJobPositions(response.data.data);
+      }
+    } catch (err) {
+      console.error('Error fetching job positions:', err);
+    }
+  };
+
+  const fetchCities = async () => {
+    try {
+      const response = await api.get('/cities/getAllCities');
+      if (response.data.success && response.data.data) {
+        setCities(response.data.data);
+      }
+    } catch (err) {
+      console.error('Error fetching cities:', err);
+    }
+  };
+
+  const fetchMyJobs = async () => {
+    try {
+      const response = await api.get('/job-advertisements');
+      if (response.data.success && response.data.data) {
+        const employerId = parseInt(localStorage.getItem('employerId'));
+        const filtered = response.data.data.filter(job => job.employer?.id === employerId);
+        setMyJobs(filtered);
+      }
+    } catch (err) {
+      console.error('Error fetching jobs:', err);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    
+    if (name === 'jobPositionId') {
+      setFormData({
+        ...formData,
+        jobPosition: { id: parseInt(value) }
+      });
+    } else if (name === 'cityId') {
+      setFormData({
+        ...formData,
+        city: { id: parseInt(value) }
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    
+    try {
+      const jobData = {
+        jobPosition: { id: formData.jobPosition.id },
+        city: { id: formData.city.id },
+        employer: { id: parseInt(localStorage.getItem('employerId')) },
+        description: formData.description,
+        minSalary: parseInt(formData.minSalary),
+        maxSalary: parseInt(formData.maxSalary),
+        openPositionCount: parseInt(formData.openPositionCount),
+        applicationDeadline: formData.applicationDeadline,
+        jobReleaseDate: new Date().toISOString().split('T')[0]
+      };
+
+      const response = await api.post('/job-advertisements', jobData);
+      
+      if (response.data.success) {
+        alert('Job advertisement created successfully!');
+        setShowForm(false);
+        setFormData({
+          jobPosition: { id: '' },
+          city: { id: '' },
+          employer: { id: localStorage.getItem('employerId') },
+          description: '',
+          minSalary: '',
+          maxSalary: '',
+          openPositionCount: '',
+          applicationDeadline: ''
+        });
+        fetchMyJobs();
+      } else {
+        setError(response.data.message || 'Failed to create job advertisement');
+      }
+    } catch (err) {
+      console.error('Error creating job:', err);
+      setError(err.response?.data?.message || 'Failed to create job advertisement');
+    }
+  };
 
   const handleLogout = () => {
+    localStorage.removeItem('employerId');
     localStorage.removeItem('userType');
-    localStorage.removeItem('userEmail');
+    localStorage.removeItem('companyName');
     navigate('/');
   };
 
   return (
-    <div className="container">
-      <div className="card">
-        <div className="card-header">
-          Employer Dashboard
-          <button className="btn btn-danger" style={{float: 'right'}} onClick={handleLogout}>
-            Logout
-          </button>
+    <div className="dashboard-container">
+      <div className="dashboard-header">
+        <h2>Employer Dashboard</h2>
+        <p>Welcome, {localStorage.getItem('companyName')}!</p>
+        <button onClick={handleLogout} className="btn-secondary">Logout</button>
+      </div>
+
+      <div className="dashboard-actions">
+        <button onClick={() => setShowForm(!showForm)} className="btn-primary">
+          {showForm ? 'Hide Form' : 'Post New Job'}
+        </button>
+      </div>
+
+      {showForm && (
+        <div className="job-form-container">
+          <h3>Create Job Advertisement</h3>
+          {error && <div className="error-message">{error}</div>}
+          
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Job Position:</label>
+              <select
+                name="jobPositionId"
+                value={formData.jobPosition.id}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select a position</option>
+                {jobPositions.map(pos => (
+                  <option key={pos.id} value={pos.id}>{pos.title}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>City:</label>
+              <select
+                name="cityId"
+                value={formData.city.id}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select a city</option>
+                {cities.map(city => (
+                  <option key={city.id} value={city.id}>{city.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>Job Description:</label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                required
+                rows="5"
+                placeholder="Describe the job role, responsibilities, and requirements..."
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Minimum Salary:</label>
+              <input
+                type="number"
+                name="minSalary"
+                value={formData.minSalary}
+                onChange={handleChange}
+                required
+                min="0"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Maximum Salary:</label>
+              <input
+                type="number"
+                name="maxSalary"
+                value={formData.maxSalary}
+                onChange={handleChange}
+                required
+                min="0"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Number of Open Positions:</label>
+              <input
+                type="number"
+                name="openPositionCount"
+                value={formData.openPositionCount}
+                onChange={handleChange}
+                required
+                min="1"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Application Deadline:</label>
+              <input
+                type="date"
+                name="applicationDeadline"
+                value={formData.applicationDeadline}
+                onChange={handleChange}
+                required
+                min={new Date().toISOString().split('T')[0]}
+              />
+            </div>
+
+            <button type="submit" className="btn-primary">Post Job</button>
+          </form>
         </div>
+      )}
 
-        <p style={{marginBottom: '2rem'}}>Welcome, {userEmail}!</p>
-
-        <div className="features">
-          <div className="feature-card">
-            <h3>Manage Job Positions</h3>
-            <p>Create, edit, and delete job positions</p>
-            <Link to="/job-positions">
-              <button className="btn btn-primary">Go to Positions</button>
-            </Link>
+      <div className="my-jobs-container">
+        <h3>My Posted Jobs ({myJobs.length})</h3>
+        {myJobs.length === 0 ? (
+          <p>You haven't posted any jobs yet.</p>
+        ) : (
+          <div className="job-list">
+            {myJobs.map(job => (
+              <div key={job.advertisementId} className="job-card">
+                <h4>{job.jobPosition?.title}</h4>
+                <p><strong>City:</strong> {job.city?.name}</p>
+                <p><strong>Description:</strong> {job.description}</p>
+                <p><strong>Salary Range:</strong> ${job.minSalary} - ${job.maxSalary}</p>
+                <p><strong>Open Positions:</strong> {job.openPositionCount}</p>
+                <p><strong>Deadline:</strong> {new Date(job.applicationDeadline).toLocaleDateString()}</p>
+                <p><strong>Posted:</strong> {new Date(job.jobReleaseDate).toLocaleDateString()}</p>
+              </div>
+            ))}
           </div>
-
-          <div className="feature-card">
-            <h3>View Job Seekers</h3>
-            <p>Browse registered job seekers</p>
-            <Link to="/jobseekers">
-              <button className="btn btn-info">View Job Seekers</button>
-            </Link>
-          </div>
-
-          <div className="feature-card">
-            <h3>My Profile</h3>
-            <p>Manage your company profile</p>
-            <Link to="/employers">
-              <button className="btn btn-success">View Profile</button>
-            </Link>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
