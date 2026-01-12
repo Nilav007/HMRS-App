@@ -34,6 +34,7 @@ function EmployerDashboard() {
   const fetchJobPositions = async () => {
     try {
       const response = await api.get('/jobpositions/getall');
+      console.log('Job Positions Response:', response.data);
       if (response.data.success && response.data.data) {
         setJobPositions(response.data.data);
       }
@@ -45,7 +46,10 @@ function EmployerDashboard() {
   const fetchCities = async () => {
     try {
       const response = await api.get('/cities/getAllCities');
+      console.log('Cities Response:', response.data);
       if (response.data.success && response.data.data) {
+        setCities(response.data.data);
+      } else if (response.data.succes && response.data.data) {
         setCities(response.data.data);
       }
     } catch (err) {
@@ -56,7 +60,8 @@ function EmployerDashboard() {
   const fetchMyJobs = async () => {
     try {
       const response = await api.get('/job-advertisements');
-      if (response.data.success && response.data.data) {
+      // Handle both 'success' and 'succes' (typo in backend)
+      if ((response.data.success || response.data.succes) && response.data.data) {
         const employerId = parseInt(localStorage.getItem('employerId'));
         const filtered = response.data.data.filter(job => job.employer?.id === employerId);
         setMyJobs(filtered);
@@ -106,8 +111,9 @@ function EmployerDashboard() {
 
       const response = await api.post('/job-advertisements', jobData);
       
-      if (response.data.success) {
-        alert('Job advertisement created successfully!');
+      // Handle both 'success' and 'succes' (typo in backend)
+      if (response.data.success || response.data.succes) {
+        alert('Job posting added.');
         setShowForm(false);
         setFormData({
           jobPosition: { id: '' },
@@ -181,7 +187,7 @@ function EmployerDashboard() {
               >
                 <option value="">Select a city</option>
                 {cities.map(city => (
-                  <option key={city.id} value={city.id}>{city.name}</option>
+                  <option key={city.id} value={city.id}>{city.cityName}</option>
                 ))}
               </select>
             </div>
@@ -260,7 +266,7 @@ function EmployerDashboard() {
             {myJobs.map(job => (
               <div key={job.advertisementId} className="job-card">
                 <h4>{job.jobPosition?.title}</h4>
-                <p><strong>City:</strong> {job.city?.name}</p>
+                <p><strong>City:</strong> {job.city?.cityName}</p>
                 <p><strong>Description:</strong> {job.description}</p>
                 <p><strong>Salary Range:</strong> ${job.minSalary} - ${job.maxSalary}</p>
                 <p><strong>Open Positions:</strong> {job.openPositionCount}</p>

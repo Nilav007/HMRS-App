@@ -12,7 +12,7 @@ function JobPositions() {
 
   const fetchJobAdvertisements = async () => {
     try {
-      const response = await api.get('/job-advertisements');
+      const response = await api.get('/job-advertisements/active');
       if (response.data.success && response.data.data) {
         setJobAdvertisements(response.data.data);
       } else {
