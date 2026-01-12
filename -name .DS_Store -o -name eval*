@@ -1,0 +1,64 @@
+[33mcommit e11d3127d4c512b0852df1c60f17042db6f3fed7[m
+Author: Anupam Nilav <anupam.nilav1121@gmail.com>
+Date:   Wed Jan 8 20:23:52 2025 +0530
+
+    Fix line endings
+
+ .DS_Store                                          | Bin [31m0[m -> [32m6148[m bytes
+ .gitignore                                         |  33 [32m+++[m
+ .mvn/wrapper/maven-wrapper.jar                     | Bin [31m0[m -> [32m62547[m bytes
+ .mvn/wrapper/maven-wrapper.properties              |   2 [32m+[m
+ README.md                                          |  12 [32m+[m
+ "eval \357\200\242$(ssh-agent -s)\357\200\242"     |  49 [32m++++[m
+ "eval \357\200\242$(ssh-agent -s)\357\200\242.pub" |   1 [32m+[m
+ mvnw                                               | 308 [32m+++++++++++++++++++++[m
+ mvnw.cmd                                           | 205 [32m++++++++++++++[m
+ pom.xml                                            |  69 [32m+++++[m
+ src/.DS_Store                                      | Bin [31m0[m -> [32m6148[m bytes
+ src/main/.DS_Store                                 | Bin [31m0[m -> [32m6148[m bytes
+ src/main/java/.DS_Store                            | Bin [31m0[m -> [32m6148[m bytes
+ src/main/java/hrms/.DS_Store                       | Bin [31m0[m -> [32m6148[m bytes
+ src/main/java/hrms/hrms/HrmsApplication.java       |  13 [32m+[m
+ .../hrms/hrms/api/controllers/CityController.java  |  38 [32m+++[m
+ .../hrms/api/controllers/EmployersController.java  |  37 [32m+++[m
+ .../controllers/JobAdvertisementController.java    |  42 [32m+++[m
+ .../api/controllers/JobPositionController.java     |  38 [32m+++[m
+ .../hrms/api/controllers/JobSeekerController.java  |  38 [32m+++[m
+ .../api/controllers/SystemEmployeeController.java  |  40 [32m+++[m
+ .../hrms/hrms/business/abstracts/CityService.java  |  13 [32m+[m
+ .../hrms/business/abstracts/EmployerService.java   |  13 [32m+[m
+ .../abstracts/JobAdvertisementService.java         |  16 [32m++[m
+ .../hrms/business/abstracts/JobPositonService.java |  13 [32m+[m
+ .../hrms/business/abstracts/JobSeekerService.java  |  13 [32m+[m
+ .../business/abstracts/SytemEmployeeService.java   |  14 [32m+[m
+ .../hrms/hrms/business/concretes/CityManager.java  |  35 [32m+++[m
+ .../hrms/business/concretes/EmployerManager.java   |  76 [32m+++++[m
+ .../concretes/JobAdvertisementManager.java         |  44 [32m+++[m
+ .../business/concretes/JobPositionManager.java     |  50 [32m++++[m
+ .../hrms/business/concretes/JobSeekerManager.java  |  64 [32m+++++[m
+ .../business/concretes/SystemEmployeeManager.java  |  34 [32m+++[m
+ .../hrms/core/abstracts/HrConfirmaitonService.java |   9 [32m+[m
+ .../core/abstracts/MailVerificationService.java    |   8 [32m+[m
+ .../hrms/core/concretes/HrConfirmationManager.java |  17 [32m++[m
+ .../concretes/MailVerificati\304\261nManager.java" |  17 [32m++[m
+ .../java/hrms/hrms/core/utilities/DataResult.java  |  21 [32m++[m
+ .../hrms/hrms/core/utilities/ErrorDataResult.java  |  21 [32m++[m
+ .../java/hrms/hrms/core/utilities/ErrorResult.java |  11 [32m+[m
+ src/main/java/hrms/hrms/core/utilities/Result.java |  24 [32m++[m
+ .../hrms/core/utilities/SuccessDataResult.java     |  24 [32m++[m
+ .../hrms/hrms/core/utilities/SuccessResult.java    |  14 [32m+[m
+ .../hrms/hrms/dataAccess/abstracts/CityDao.java    |  10 [32m+[m
+ .../hrms/dataAccess/abstracts/EmployerDao.java     |  12 [32m+[m
+ .../dataAccess/abstracts/JobAdvertisementDao.java  |  19 [32m++[m
+ .../hrms/dataAccess/abstracts/JobPositonDao.java   |  11 [32m+[m
+ .../hrms/dataAccess/abstracts/JobSeekerDao.java    |  12 [32m+[m
+ .../dataAccess/abstracts/SystemEmployeeDao.java    |   9 [32m+[m
+ .../java/hrms/hrms/entities/concretes/City.java    |  34 [32m+++[m
+ .../hrms/hrms/entities/concretes/Employer.java     |  48 [32m++++[m
+ .../hrms/entities/concretes/JobAdvertisement.java  |  62 [32m+++++[m
+ .../hrms/hrms/entities/concretes/JobPosition.java  |  36 [32m+++[m
+ .../hrms/hrms/entities/concretes/JobSeeker.java    |  47 [32m++++[m
+ .../hrms/entities/concretes/SystemEmployee.java    |  31 [32m+++[m
+ src/main/resources/application.properties          |   8 [32m+[m
+ src/test/java/hrms/hrms/HrmsApplicationTests.java  |  13 [32m+[m
+ 57 files changed, 1828 insertions(+)

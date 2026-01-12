@@ -31,3 +31,20 @@ build/
 
 
 .vscode/
+
+# macOS
+.DS_Store
+
+# SSH keys
+eval*
+
+# Backup files
+*.backup
+*.old
+
+# Maven
+target/
+
+# Frontend
+frontend/node_modules/
+frontend/build/
