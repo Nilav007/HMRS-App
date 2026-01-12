@@ -1,0 +1,21 @@
+INSERT INTO job_position (title) VALUES ('Software Engineer') ON CONFLICT DO NOTHING;
+INSERT INTO job_position (title) VALUES ('Senior Software Engineer') ON CONFLICT DO NOTHING;
+INSERT INTO job_position (title) VALUES ('Full Stack Developer') ON CONFLICT DO NOTHING;
+INSERT INTO job_position (title) VALUES ('Frontend Developer') ON CONFLICT DO NOTHING;
+INSERT INTO job_position (title) VALUES ('Backend Developer') ON CONFLICT DO NOTHING;
+INSERT INTO job_position (title) VALUES ('DevOps Engineer') ON CONFLICT DO NOTHING;
+INSERT INTO job_position (title) VALUES ('Data Scientist') ON CONFLICT DO NOTHING;
+INSERT INTO job_position (title) VALUES ('Product Manager') ON CONFLICT DO NOTHING;
+INSERT INTO job_position (title) VALUES ('UI/UX Designer') ON CONFLICT DO NOTHING;
+INSERT INTO job_position (title) VALUES ('QA Engineer') ON CONFLICT DO NOTHING;
+
+INSERT INTO city (city_name) VALUES ('Mumbai') ON CONFLICT DO NOTHING;
+INSERT INTO city (city_name) VALUES ('Delhi') ON CONFLICT DO NOTHING;
+INSERT INTO city (city_name) VALUES ('Bangalore') ON CONFLICT DO NOTHING;
+INSERT INTO city (city_name) VALUES ('Hyderabad') ON CONFLICT DO NOTHING;
+INSERT INTO city (city_name) VALUES ('Chennai') ON CONFLICT DO NOTHING;
+INSERT INTO city (city_name) VALUES ('Kolkata') ON CONFLICT DO NOTHING;
+INSERT INTO city (city_name) VALUES ('Pune') ON CONFLICT DO NOTHING;
+INSERT INTO city (city_name) VALUES ('Ahmedabad') ON CONFLICT DO NOTHING;
+INSERT INTO city (city_name) VALUES ('Jaipur') ON CONFLICT DO NOTHING;
+INSERT INTO city (city_name) VALUES ('Surat') ON CONFLICT DO NOTHING;
