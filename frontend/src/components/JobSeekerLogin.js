@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import api from '../services/api';
 
 function JobSeekerLogin() {
   const navigate = useNavigate();
@@ -13,11 +14,30 @@ function JobSeekerLogin() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    localStorage.setItem('userType', 'jobseeker');
-    localStorage.setItem('userEmail', formData.email);
-    navigate('/jobseeker-dashboard');
+    
+    try {
+      const response = await api.get('/jobseekers/getall');
+      
+      if (response.data.success && response.data.data) {
+        const jobSeeker = response.data.data.find(
+          js => js.email === formData.email && js.password === formData.password
+        );
+        
+        if (jobSeeker) {
+          localStorage.setItem('userType', 'jobseeker');
+          localStorage.setItem('userEmail', formData.email);
+          localStorage.setItem('userId', jobSeeker.id);
+          navigate('/jobseeker-dashboard');
+        } else {
+          setMessage({ text: 'Invalid email or password', type: 'danger' });
+        }
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setMessage({ text: 'Login failed. Please try again.', type: 'danger' });
+    }
   };
 
   return (
